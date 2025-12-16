@@ -3,16 +3,20 @@
 ## Example adapted from Nowok, Raab & Dibben (2023)
 ## --------------------------------------------------------------
 
+## --------------------------------------------------------------
+## 1. Import required libraries
+## --------------------------------------------------------------
+
 library(synthpop)
 library(tidyverse)
 library(here)
 library(rio)
 
 ## --------------------------------------------------------------
-## 1. Importazione dati
+## 2. Data import
 ## --------------------------------------------------------------
-## Carichiamo il dataset osservato che vogliamo sintetizzare.
-## Le specifiche dei tipi vengono fissate per evitare conversioni indesiderate.
+## Load the observed dataset to be synthesized.
+## Set data types to avoid unwanted conversions.
 
 data_input <- read_csv(
   here("Epidemiol Prev", "data_input.csv"),
@@ -24,45 +28,44 @@ data_input <- read_csv(
   )
 )
 
-## Esploriamo le prime righe
+## Display the first rows and the structure of the input data
 head(data_input)
-str(data_input)
+glimpse(data_input)
 
 ## --------------------------------------------------------------
-## 2. Impostazione seed per riproducibilità
+## 3. Set seed for reproducibility
 ## --------------------------------------------------------------
 my.seed <- 1841634
 set.seed(my.seed)
 
 ## --------------------------------------------------------------
-## 3. Sintesi con metodi di default
+## 4. Synthesis using default methods
 ## --------------------------------------------------------------
-## Utilizziamo syn() senza specificare metodi:
-## - la prima variabile nell’ordine di sintesi è generata con metodo "sample" (campionamento casuale)
-## - tutte le altre con metodo CART (utilizzando come predittori le variabili sintetizzate prima)
-## - l’ordine di sintesi (visit.sequence) segue l’ordine originale delle variabili nel dataset
+## We use syn() without specifying methods:
+## - the first variable in the synthesis order is generated using the "sample" method (random sampling)
+## - all remaining variables use the CART method (with previously synthesized variables as predictors)
+## - the synthesis order (visit.sequence) follows the original variable order in the dataset
 
+# Record start time
 start <- Sys.time()
 
+# Generate the synthetic dataset
 sds.default <- syn(
   data = data_input,
   seed = my.seed
 )
 
-## L’oggetto risultante è un oggetto di classe "synds".
-## La stampa mostra:
-## - prime righe del dataset sintetico
-## - metodi di sintesi usati
-## - ordine di sintesi
-## - predictor matrix
-
-sds.default        # output sintetico e informazioni rilevanti
-
-## Estrarre il dataset sintetico (componente $syn)
-data_syn <- sds.default$syn
-
+# Record end time and print elapsed time
 end <- Sys.time()
-
 cat("Time to generate the synthetic dataset:", end - start, "\n")
 
+## The resulting object is of class "synds".
+## Printing it shows:
+## - the first rows of the synthetic dataset
+## - the synthesis methods used
+## - the synthesis order
+## - the predictor matrix
+sds.default
 
+## Extract the synthetic dataset (the $syn component)
+data_syn <- sds.default$syn
