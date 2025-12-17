@@ -11,6 +11,7 @@ library(synthpop)
 library(tidyverse)
 library(here)
 library(rio)
+library(skimr)
 
 ## --------------------------------------------------------------
 ## 2. Data import
@@ -31,11 +32,12 @@ data_input <- read_csv(
 ## Display the first rows and the structure of the input data
 head(data_input)
 glimpse(data_input)
+skim(data_input)
 
 ## --------------------------------------------------------------
 ## 3. Set seed for reproducibility
 ## --------------------------------------------------------------
-my.seed <- 1841634
+my.seed <- 123
 set.seed(my.seed)
 
 ## --------------------------------------------------------------
@@ -67,5 +69,5 @@ cat("Time to generate the synthetic dataset:", end - start, "\n")
 ## - the predictor matrix
 sds.default
 
-## Extract the synthetic dataset (the $syn component)
-data_syn <- sds.default$syn
+## Extract the synthetic dataset (the $syn component) and export new dataset in the current working directory
+data_syn_synthpop <- sds.default$syn |> export("data_syn_synthpop.csv")

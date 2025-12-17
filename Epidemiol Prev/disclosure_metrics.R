@@ -1,6 +1,6 @@
 ## --------------------------------------------------------------
-## Misure di disclosure per i dati sintetici con multi.disclosure()
-## Esempio adattato da Nowok, Raab & Dibben (2025)
+## Disclosure measures for synthetic data using multi.disclosure()
+## Example adapted from Nowok, Raab & Dibben (2025)
 ## --------------------------------------------------------------
 
 library(synthpop)
@@ -8,18 +8,24 @@ library(synthpop)
 # Quasi-identifiers (keys)
 keys <- c("eta", "sesso", "centro", "icu")
 
-# multi.disclosure calcola UiO, repU, Dorig, DiSCO e altri indicatori
+## --------------------------------------------------------------
+## 1. Disclosure measures for synthpop data
+## --------------------------------------------------------------
+
+# multi.disclosure calculates UiO, repU, Dorig, DiSCO, and other measures
 md_synthpop <- multi.disclosure(
-  sds.default,        # synthetic dataset
+  sds.default,        # synthetic dataset generated using synthpop
   data_input,         # input data
   keys = keys
 )
 
 md_synthpop
 
-## --------------------------------------------------------------
-## 2. ATTRIBUTE DISCLOSURE (Dorig e DiSCO) per ciascuna variabile target
-## --------------------------------------------------------------
+## Focus on overall IDENTITY DISCLOSURE measures 
+## Original data (UiO): 0.26%
+## Synthetic data (repU): 0.06%
+
+## ATTRIBUTE DISCLOSURE (Dorig and DiSCO) for each target variable 
 
 var_list <- c(
   "p_coagul_n_d1", "p_aggreg_n_d1", "p_ipolipe_n_d1", "p_ritmo_n_d1",
@@ -32,33 +38,45 @@ var_list <- c(
   "c_artreuma_d1"
 )
 
-# Ciclo sulle variabili target
+# Loop over the target variables
 discl_synthpop <- lapply(var_list, function(v) {
   disclosure(
-    data_syn, data_input,
+    data_syn_synthpop, data_input,
     keys = keys,
     target = v,
     compare.synorig = TRUE,
-    not.targetlev = "no"      # esclude livelli non informativi
+    not.targetlev = "no"      # Exclude non-informative levels
   )
 })
 
-# Stampa dei risultati
-lapply(discl_synthpop, function(x) print(x, to.print = "attrib"))
+# Print the results
+lapply(discl_synthpop, function(x) print(x, to.print = "attrib")) ## Focus on Attribute disclosure measures (Dorig/DiSCO)
 
 ## --------------------------------------------------------------
-## 3. CT-GAN: misure di disclosure con esclusione di "no"
+## 2. Disclosure measures for CT-GAN data
 ## --------------------------------------------------------------
-dati_sintetici_ctgan <- read_csv(here("DATASET","dati_sintetici_ctgan.csv"),  # Da modificare qui
-    col_types = cols(id = col_integer(), eta = col_integer(), 
-        time_fup = col_integer(), status_dec = col_character(), 
-        npresc = col_integer(), npresc3 = col_integer()))
-gan <- dplyr::select(dati_sintetici_ctgan,-id)
-data.si$syn <- as.data.frame(gan)  # Da modificare qui
+
+data.si <- syn(data_input, seed = my.seed, method = "parametric")
+data_syn_ctgan <- read_csv(here("Epidemiol Prev","data_syn_ctgan.csv"),
+    col_types = cols(eta = col_integer(), time_fup = col_integer(), 
+                     status_dec = col_character(), npresc = col_integer(), npresc3 = col_integer()))
+data.si$syn <- as.data.frame(data_syn_ctgan)
+
+md_gan <- multi.disclosure(
+  data.si$syn,        # synthetic dataset generated using CT-GAN
+  data_input,         # input data
+  keys = keys
+)
+
+md_gan
+
+## Focus on overall IDENTITY DISCLOSURE measures 
+## Original data (UiO): 0.26%
+## Synthetic data (repU): 0.06%   #non mi trovo, questo dovrebbe essere 0.06
 
 discl_ctgan <- lapply(var_list, function(v) {
   disclosure(
-    data.si$syn, data_input,                                     # Da modificare data.si$syn
+    data.si$syn, data_input,                                    
     keys = keys,
     target = v,
     compare.synorig = TRUE,
@@ -66,4 +84,4 @@ discl_ctgan <- lapply(var_list, function(v) {
   )
 })
 
-lapply(discl_ctgan, function(x) print(x, to.print = "attrib"))
+lapply(discl_ctgan, function(x) print(x, to.print = "attrib")) ## Focus on Attribute disclosure measures (Dorig/DiSCO)
