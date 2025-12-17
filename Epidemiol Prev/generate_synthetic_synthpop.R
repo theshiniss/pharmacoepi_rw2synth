@@ -6,12 +6,9 @@
 ## --------------------------------------------------------------
 ## 1. Import required libraries
 ## --------------------------------------------------------------
-
-library(synthpop)
 library(tidyverse)
-library(here)
-library(rio)
 library(skimr)
+library(synthpop)
 
 ## --------------------------------------------------------------
 ## 2. Data import
@@ -20,7 +17,7 @@ library(skimr)
 ## Set data types to avoid unwanted conversions.
 
 data_input <- read_csv(
-  here("Epidemiol Prev", "data_input.csv"),
+  "data_input.csv",
   col_types = cols(
     eta      = col_integer(),
     time_fup = col_integer(),
@@ -69,12 +66,5 @@ cat("Time to generate the synthetic dataset:", end - start, "\n")
 ## - the predictor matrix
 sds.default
 
+## Extract the synthetic dataset (the $syn component) and export new dataset in the current working directory
 data_syn_synthpop <- sds.default$syn |> export("data_syn_synthpop.csv")
-## Extract the synthetic dataset (the $syn component)
-data_syn_synthpop <- sds.default$syn
-
-## Export new dataset in the current working directory
-export(
-  data_syn_synthpop,
-  here("Epidemiol Prev", "data_syn_synthpop.csv")
-)

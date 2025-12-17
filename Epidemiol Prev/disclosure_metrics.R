@@ -12,7 +12,7 @@ keys <- c("eta", "sesso", "centro", "icu")
 ## 1. Disclosure measures for synthpop data
 ## --------------------------------------------------------------
 
-data_syn_synthpop <- read_csv(here("Epidemiol Prev","data_syn_synthpop.csv"),
+data_syn_synthpop <- read_csv("data_syn_synthpop.csv",
     col_types = cols(eta = col_integer(), time_fup = col_integer(), 
                      status_dec = col_character(), npresc = col_integer(), npresc3 = col_integer()))
 
