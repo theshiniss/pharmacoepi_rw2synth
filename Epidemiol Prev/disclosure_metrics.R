@@ -76,7 +76,7 @@ md_gan
 
 ## Focus on overall IDENTITY DISCLOSURE measures 
 ## Original data (UiO): 0.26%
-## Synthetic data (repU): 0.06%   #non mi trovo, questo dovrebbe essere 0.06
+## Synthetic data (repU): 0.06%   #non mi trovo, questo dovrebbe essere 0.05
 
 discl_ctgan <- lapply(var_list, function(v) {
   disclosure(

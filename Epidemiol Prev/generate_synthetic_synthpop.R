@@ -69,5 +69,12 @@ cat("Time to generate the synthetic dataset:", end - start, "\n")
 ## - the predictor matrix
 sds.default
 
-## Extract the synthetic dataset (the $syn component) and export new dataset in the current working directory
 data_syn_synthpop <- sds.default$syn |> export("data_syn_synthpop.csv")
+## Extract the synthetic dataset (the $syn component)
+data_syn_synthpop <- sds.default$syn
+
+## Export new dataset in the current working directory
+export(
+  data_syn_synthpop,
+  here("Epidemiol Prev", "data_syn_synthpop.csv")
+)
