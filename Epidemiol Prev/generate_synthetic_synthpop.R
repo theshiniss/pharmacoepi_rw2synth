@@ -9,6 +9,7 @@
 library(tidyverse)
 library(skimr)
 library(synthpop)
+library(rio)
 
 ## --------------------------------------------------------------
 ## 2. Data import

@@ -30,7 +30,7 @@ print(f'Using device: {device}')
 ## 3. Load the dataset as a pandas Dataframe
 ## --------------------------------------------------------------
 
-df=pd.read_csv("Epidemiol Prev/data_input.csv")
+df=pd.read_csv("data_input.csv")
 
 ## --------------------------------------------------------------
 ## 4. Detect and validate metadata
