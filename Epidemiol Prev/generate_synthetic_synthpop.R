@@ -14,7 +14,7 @@ library(rio)
 ## --------------------------------------------------------------
 ## 2. Data import
 ## --------------------------------------------------------------
-## Load the observed dataset to be synthesized.
+## Load the input dataset to be synthesized.
 ## Set data types to avoid unwanted conversions.
 
 data_input <- read_csv(
@@ -28,7 +28,6 @@ data_input <- read_csv(
 )
 
 ## Display the first rows and the structure of the input data
-head(data_input)
 glimpse(data_input)
 skim(data_input)
 
@@ -68,4 +67,4 @@ cat("Time to generate the synthetic dataset:", end - start, "\n")
 sds.default
 
 ## Extract the synthetic dataset (the $syn component) and export new dataset in the current working directory
-data_syn_synthpop <- sds.default$syn |> export("data_syn_synthpop.csv")
+sds.default$syn |> export("data_syn_synthpop.csv")
